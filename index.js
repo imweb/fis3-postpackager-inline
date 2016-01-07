@@ -44,8 +44,8 @@ var entry = module.exports = function(ret, pack, settings, opt) {
 
 entry.defaultOptions = {
     match: { 
-        '<script\\s[^>]*src="([^"]*\\.inline\\.[^"]*)"[^>]*>\\s*</script>': 1,
-        '<link\\s[^>]*href="([^"]*\\.inline\\.[^"]*)"[^>]*>': 1
+        '<script\\s[^>]*src="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>\\s*</script>': 1,
+        '<link\\s[^>]*href="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>': 1
     }
 };
 

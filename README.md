@@ -25,7 +25,7 @@ fis.media('dist')
     })
 ```
 
-## options
+## Options
 
 ### match `{Object<String, Number>}`
 
@@ -33,10 +33,10 @@ fis.media('dist')
 
 ```js
     {
-        '<script\\s[^>]*src="([^"]*\\.inline\\.[^"]*)"[^>]*>\\s*</script>': 1,
-        '<link\\s[^>]*href="([^"]*\\.inline\\.[^"]*)"[^>]*>': 1
+        '<script\\s[^>]*src="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>\\s*</script>': 1,
+        '<link\\s[^>]*href="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>': 1
     }
 ```
 
-匹配表达式, 默认inline文件名为`*.inline.*`的`script`/`link`标签
+匹配表达式, 默认inline文件名为`*inline*`的`script`/`link`标签
 
