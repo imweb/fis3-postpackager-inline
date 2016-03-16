@@ -13,13 +13,6 @@ npm install fis3-postpackager-inline
 fis.media('dist')
     .match('::packager', {
         postpackager: [
-            fis.plugin('loader', {
-                resourceType: 'commonJs',
-                allInOne: {
-                    js: '${filepath}_aio.inline.js',
-                    css: '${filepath}_aio.inline.css'
-                }
-            }),
             fis.plugin('inline')
         ]
     })
@@ -27,16 +20,15 @@ fis.media('dist')
 
 ## Options
 
-### match `{Object<String, Number>}`
+### jsMaxKb `{Number}` 
 
-`default`:
+`default` 5
 
-```js
-    {
-        '<script\\s[^>]*src="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>\\s*</script>': 1,
-        '<link\\s[^>]*href="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>': 1
-    }
-```
+inline js文件的最大kb数
 
-匹配表达式, 默认inline文件名为`*inline*`的`script`/`link`标签
+### cssMaxKb `{Number}` 
+
+`default` 20
+
+inline css文件的最大kb数
 

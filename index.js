@@ -1,11 +1,15 @@
 
+/**
+ * fis inline
+ */
 var entry = module.exports = function(ret, pack, settings, opt) {
     var files = ret.pkg,
         hashReleaseMap = {};
 
     ['pkg', 'urlmapping'].forEach(function(key) {
         ret[key] && Object.keys(ret[key]).forEach(function(path) {
-            hashReleaseMap[ret[key][path].getHashRelease()] = ret[key][path];
+            var file = ret[key][path];
+            hashReleaseMap[(file.domain || '') + file.getHashRelease()] = file;
         });
     });
 
@@ -17,35 +21,50 @@ var entry = module.exports = function(ret, pack, settings, opt) {
     function compile(file) {
         if (file.release === false 
             || !file.isHtmlLike 
+            || file.isPartial
         ) {
             return;
         }
 
         var content = file.getContent();
 
-        Object.keys(settings.match).forEach(function(exp) {
-            var id = settings.match[exp],
-                match = new RegExp(exp, 'g');
-            content = content.replace(match, function(text) {
-                var path = RegExp['$' + (isNaN(id) ? 1 : id)],
-                    file = hashReleaseMap[path] || null;
-                if (file) {
-                    return text.match(/^.{0,10}script/)
-                        ? '<script>' + file.getContent() + '</script>' 
-                        : '<style>' + file.getContent() + '</style>';
-                }
-                return text;
-            });
+        var jsLink = /<script\s[^>]*\bsrc=(["'])([^>"']+)\1[^>]*>/g,
+            cssLink = /<link\s[^>]*\bhref=(["'])([^>"']+)\1[^>]*>/g;
+        content = content.replace(jsLink, function(text) {
+            return replacement(RegExp.$2) || text;
         });
+        content = content.replace(cssLink, function(text) {
+            var url = RegExp.$2;
+            if (text.match(/rel=(["'])stylesheet\1/)) {
+                return replacement(url) || text;
+            }
+            return text;
+        });
+
+        function replacement(url) {
+            var file = hashReleaseMap[url] || null,
+                content = file && file.getContent() || '';
+            if (file) {
+                if (file._likes && file._likes.isJsLike) {
+                    if (content.length < settings.jsMaxKb * 1024) {
+                        return '<script>' + content + '</script>';
+                    }
+                } else {
+                    if (content.length < settings.cssMaxKb * 1024) {
+                        return '<style>' + content + '</style>';
+                    }
+                }
+            }
+            return null;
+        }
 
         file.setContent(content);
     }
 };
 
 entry.defaultOptions = {
-    match: { 
-        '<script\\s[^>]*src="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>\\s*</script>': 1,
-        '<link\\s[^>]*href="([^"]*[^\\da-zA-Z]inline[^\\da-zA-Z][^"]*)"[^>]*>': 1
-    }
+    // 当超过这个大小时,不inline
+    cssMaxKb: 20,
+    jsMaxKb: 5
 };
 
