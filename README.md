@@ -20,15 +20,21 @@ fis.media('dist')
 
 ## Options
 
-### jsMaxKb `{Number}` 
+### max `{Number}`
+
+`default` 25
+
+inline文件总最大kb数
+
+### jsMax `{Number}`
 
 `default` 5
 
-inline js文件的最大kb数
+inline js文件最大kb数
 
-### cssMaxKb `{Number}` 
+### cssMax `{Number}` 
 
 `default` 20
 
-inline css文件的最大kb数
+inline css文件最大kb数
 

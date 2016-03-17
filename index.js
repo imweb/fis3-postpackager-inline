@@ -6,6 +6,11 @@ var entry = module.exports = function(ret, pack, settings, opt) {
     var files = ret.pkg,
         hashReleaseMap = {};
 
+    // convert kb
+    settings.max *= 1024;
+    settings.jsMax *= 1024;
+    settings.cssMax *= 1024;
+
     ['pkg', 'urlmapping'].forEach(function(key) {
         ret[key] && Object.keys(ret[key]).forEach(function(path) {
             var file = ret[key][path];
@@ -41,30 +46,36 @@ var entry = module.exports = function(ret, pack, settings, opt) {
             return text;
         });
 
-        function replacement(url) {
-            var file = hashReleaseMap[url] || null,
-                content = file && file.getContent() || '';
-            if (file) {
-                if (file._likes && file._likes.isJsLike) {
-                    if (content.length < settings.jsMaxKb * 1024) {
-                        return '<script>' + content + '</script>';
-                    }
-                } else {
-                    if (content.length < settings.cssMaxKb * 1024) {
-                        return '<style>' + content + '</style>';
-                    }
+        file.setContent(content);
+    }
+
+    function replacement(url) {
+        var file = hashReleaseMap[url] || null,
+            content = file && file.getContent() || '',
+            totalLen = 0;
+        // 总大小判断
+        if (file && totalLen + content.length < settings.max) {
+            if (file._likes && file._likes.isJsLike) {
+                // 单个大小
+                if (content.length < settings.jsMax) {
+                    totalLen += content.length;
+                    return '<script>' + content + '</script>';
+                }
+            } else {
+                if (content.length < settings.cssMax) {
+                    totalLen += content.length;
+                    return '<style>' + content + '</style>';
                 }
             }
-            return null;
         }
-
-        file.setContent(content);
+        return null;
     }
 };
 
 entry.defaultOptions = {
     // 当超过这个大小时,不inline
-    cssMaxKb: 20,
-    jsMaxKb: 5
+    max: 25,
+    cssMax: 20,
+    jsMax: 5
 };
 
