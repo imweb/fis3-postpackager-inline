@@ -76,6 +76,6 @@ entry.defaultOptions = {
     // 当超过这个大小时,不inline
     max: 25,
     cssMax: 20,
-    jsMax: 5
+    jsMax: 10
 };
 

@@ -28,7 +28,7 @@ inline文件总最大kb数
 
 ### jsMax `{Number}`
 
-`default` 5
+`default` 10
 
 inline js文件最大kb数
 
