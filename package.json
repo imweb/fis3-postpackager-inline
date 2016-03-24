@@ -1,11 +1,10 @@
 {
   "name": "fis3-postpackager-inline",
-  "version": "0.1.2",
-  "description": "fis3 postpackager inline source ext",
+  "version": "0.1.3",
+  "description": "自动inline小文件至html",
   "main": "index.js",
   "keywords": [
     "fis",
-    "fis3",
     "postpackager",
     "inline"
   ],
