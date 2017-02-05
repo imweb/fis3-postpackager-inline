@@ -1,6 +1,6 @@
 {
   "name": "fis3-postpackager-inline",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "自动inline小文件至html",
   "main": "index.js",
   "keywords": [

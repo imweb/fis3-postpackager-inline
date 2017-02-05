@@ -14,7 +14,7 @@ var entry = module.exports = function(ret, pack, settings, opt) {
     ['pkg', 'urlmapping'].forEach(function(key) {
         ret[key] && Object.keys(ret[key]).forEach(function(path) {
             var file = ret[key][path];
-            hashReleaseMap[(file.domain || '') + file.getHashRelease()] = file;
+            hashReleaseMap[file.getUrl()] = file;
         });
     });
 
@@ -33,7 +33,7 @@ var entry = module.exports = function(ret, pack, settings, opt) {
 
         var content = file.getContent();
 
-        var jsLink = /<script\s[^>]*\bsrc=(["'])([^>"']+)\1[^>]*>/g,
+        var jsLink = /<script\s[^>]*\bsrc=(["'])([^>"']+)\1[^>]*>\s*<\/script>/g,
             cssLink = /<link\s[^>]*\bhref=(["'])([^>"']+)\1[^>]*>/g;
         content = content.replace(jsLink, function(text, a, url) {
             return replacement(url) || text;
