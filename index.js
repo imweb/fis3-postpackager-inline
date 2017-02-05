@@ -35,11 +35,10 @@ var entry = module.exports = function(ret, pack, settings, opt) {
 
         var jsLink = /<script\s[^>]*\bsrc=(["'])([^>"']+)\1[^>]*>/g,
             cssLink = /<link\s[^>]*\bhref=(["'])([^>"']+)\1[^>]*>/g;
-        content = content.replace(jsLink, function(text) {
-            return replacement(RegExp.$2) || text;
+        content = content.replace(jsLink, function(text, a, url) {
+            return replacement(url) || text;
         });
-        content = content.replace(cssLink, function(text) {
-            var url = RegExp.$2;
+        content = content.replace(cssLink, function(text, a, url) {
             if (text.match(/rel=(["'])stylesheet\1/)) {
                 return replacement(url) || text;
             }
